@@ -2,7 +2,7 @@ var gulp = require('gulp');
 var browserify = require('browserify');
 var babel = require('babelify');
 var react = require('react');
-var concat = require("concat");
+var concat = require("gulp-concat");
 var es = require('event-stream');
 var fs = require("fs");
 var source = require('vinyl-source-stream');
@@ -19,6 +19,8 @@ var autoprefixer = require('gulp-autoprefixer');
 var stylus = require('gulp-stylus');
 var gutil = require('gulp-util');
 var plumber = require('gulp-plumber');
+var cleanCss = require("gulp-clean-css");
+var filter = require('gulp-filter');
 
 // var sourcemaps = require('gulp-sourcemaps');
 // var source = require('vinyl-source-stream');
@@ -41,19 +43,21 @@ var p = {
 			"dist/jquery.min.js"
 		],
 		"bootstrap": [
-			"dist/css/bootstrap.min.css",
-			"dist/css/bootstrap-theme.min.css",
+			"dist/css/bootstrap.css",
+			"dist/css/bootstrap-theme.css",
 			"dist/js/bootstrap.min.js"
 		],
 		"font-awesome": [
 			"css/*",
 			"fonts/*"
-		]
+		],
+		"popper.js": ["build/popper.js"]
 		// ,
 		// "bootstrap": "**/*"
 	},
 	libsCss: [
-		"bootstrap/dist/css/bootstrap.min.css"
+		"bootstrap/dist/css/bootstrap.css",
+		"bootstrap/dist/css/bootstrap-theme.css"
 	]
 };
 
@@ -119,7 +123,7 @@ gulp.task("libs:move", function() {
 	console.log(sourcePaths);
 	return gulp.src(sourcePaths, {base: p.libsDir})
 		// .pipe(flatten())
-		.pipe(using())
+		// .pipe(using())
 		.pipe(gulp.dest(destDir));
 });
 
@@ -134,8 +138,18 @@ gulp.task("libs:inject", function() {
 		.pipe(gulp.dest("./dist"));
 });
 
+
+
+
+
+
+
+
+
+
 gulp.task("libs", ["libs:move"], function() {
-	gulp.start("libs:inject");
+	// gulp.start("libs:inject");
+	// gulp.start("libs:compress");
 });
 
 gulp.task('css:stylus', function() {
@@ -150,25 +164,37 @@ gulp.task('css:stylus', function() {
 });
 
 gulp.task("css", ["css:stylus"], function() {
-	return gulp.src("./css/**/*.css")
+	return gulp.src([ path.join(p.dest, p.libsDestSubDir, "**/*.css"), "./css/**/*.css"])
 		.pipe(autoprefixer("last 1 version", "> 1%", "ie 8", "ie 9"))
-		// .pipe(concat("style.css"))
+		.pipe(concat("bundle.css"))
 		.pipe(gulp.dest(p.dest));
+
+	// es.merge( [getLibsCssStream(), getOurCssStream()] )
+});
+	// .pipe(gulp.dest(p.dest))
+
+
+
+gulp.task("ourjs", function() {
+	return browserify({
+			entries: "./js/index.jsx",
+			debug: true
+		})
+			.transform("babelify", {presets: ["es2015", "react"]}).bundle()
+			// .pipe(jshint())
+			// .pipe(jshint.reporter(jshintStylish))
+			.pipe(source("ourcode.js"))
+			.pipe(gulp.dest(p.dest));
 });
 
-gulp.task("js", function() {
-	return browserify({
-		entries: "./js/index.jsx",
-		debug: true
-	})
-		.transform("babelify", {presets: ["es2015", "react"]}).bundle()
-		// .pipe(jshint())
-		// .pipe(jshint.reporter(jshintStylish))
-		.pipe(source("bundle.js"))
-		// .pipe(uglify())
-		// .pipe(concat("bundle.js"))
-		.pipe(gulp.dest(p.dest))
-		// .pipe(fs.createWriteStream("bundle.js"));
+gulp.task("js", ["ourjs"], function() {
+	var jsLibSrcs = getLibPaths(p.libs, false).filter( f => f.substr(-3).search(/\.js/i) > -1 );
+	jsLibSrcs.push( path.join(p.dest, "ourcode.js") );
+	return gulp.src( jsLibSrcs )
+			.pipe(concat("bundle.js"))
+			.pipe(gulp.dest(p.dest));
+	
+
 });
 
 gulp.task("code", ["js", "css"]).on("end", function() {

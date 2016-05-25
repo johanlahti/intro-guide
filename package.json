@@ -20,13 +20,15 @@
     "babel-preset-react": "latest",
     "babelify": "latest",
     "browserify": "latest",
-    "concat": "latest",
     "del": "latest",
     "event-stream": "latest",
     "fs": "latest",
     "gulp": "latest",
     "gulp-autoprefixer": "latest",
     "gulp-babel": "latest",
+    "gulp-clean-css": "^2.0.8",
+    "gulp-concat": "^2.6.0",
+    "gulp-filter": "^4.0.0",
     "gulp-flatten": "latest",
     "gulp-inject": "latest",
     "gulp-plumber": "latest",
@@ -41,6 +43,12 @@
     "react-dom": "latest",
     "react-redux": "latest",
     "redux": "latest",
+    "redux-thunk": "^2.1.0",
     "vinyl-source-stream": "latest"
+  },
+  "dependencies": {
+    "bootstrap": "^3.3.6",
+    "font-awesome": "^4.6.3",
+    "popper.js": "^0.4.2"
   }
 }

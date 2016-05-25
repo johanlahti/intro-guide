@@ -1,9 +1,13 @@
 
+import React, { Component, PropTypes } from 'react'
 
 
-
-class CanvasWithHole extends Component {
+export class CanvasWithHole extends Component {
 	
+	componentDidMount() {
+		this._drawCanvasHole( this.props.bbox );
+	}
+
 	/**
 	 * Whenever a new bbox is sent the canvas should redraw
 	 * @return {[type]} [description]
@@ -14,7 +18,7 @@ class CanvasWithHole extends Component {
 
 	_drawCanvasHole(bbox) {
 
-		var c = this._bgCanvas;
+		var c = this.refs.myCanvas;
 		var ctx = c.getContext("2d");
 		ctx.clearRect (0, 0, c.width, c.height);
 
@@ -77,7 +81,7 @@ class CanvasWithHole extends Component {
 
 	render() {
 		return (
-			<canvas class="ih-canvas-with-hole" />
+			<canvas ref="myCanvas" className="ig-canvas-with-hole" />
 		)
 	}
 
