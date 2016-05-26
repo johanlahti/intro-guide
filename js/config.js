@@ -2,6 +2,7 @@
 
 export const config = {
 
+	stepIndex: 0, // starting step index
 	steps: [
 		{
 			title: "The title",

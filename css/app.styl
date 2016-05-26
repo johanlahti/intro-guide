@@ -1,4 +1,7 @@
 
+.ig-maincontainer
+	font-size 2rem
+
 .ig-canvas-with-hole
 	z-index 2000
 	position fixed
@@ -12,5 +15,47 @@
 	position absolute
 	padding 1em
 	z-index 2001
-	.btn-group
-		margin-top 1em
+	transition left 0.5s, top 0.5s
+	color #fff
+	margin 2em
+	// background-color rgba(255,255,255,0.9)
+	// border-radius 2px
+	
+
+.ig-nav-container
+	width 100%
+	bottom 1em
+	z-index 2002
+	position absolute
+	
+
+.ig-nav
+	position relative
+	display table
+	margin 0 auto
+	color #F00
+	color rgb(255, 175, 69)
+
+// .ig-nav-btn-group
+// 	margin-top 1em
+	
+.ig-nav-btn
+	float left
+	// color #F00
+	margin-right 1em
+	cursor pointer
+	font-weight bold
+	// touch-action manipulation
+	user-select none
+	i
+		font-size 0.9em
+		margin 0 0.1em
+		transition transform 0.5s
+
+.ig-nav-btn:nth-child(1):hover
+	i
+		transform translateX(-0.5em) rotate(-360deg)
+.ig-nav-btn:nth-child(2):hover
+	i
+		transform translateX(0.5em) rotate(360deg)
+	

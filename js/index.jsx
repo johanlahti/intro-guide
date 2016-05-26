@@ -25,12 +25,9 @@ const createStoreWithMiddleware =
 		)
 		(createStore)
 
-console.log(config);
+// console.log(config); // initial state
 
-const store = createStoreWithMiddleware(rootReducer, {
-	steps: config.steps,  // static, will not change
-	stepIndex: 0
-});
+const store = createStoreWithMiddleware(rootReducer, config);
 
 const rootElement = document.querySelector("#intro");
 // <Provider store={store}>

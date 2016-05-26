@@ -1,8 +1,9 @@
 
 
 import React, { Component, PropTypes } from 'react'
-import { SmartCanvasWithHole } from '../components/SmartCanvasWithHole.jsx'
+import { CanvasWithHole } from '../components/CanvasWithHole.jsx'
 import { IntroBox } from '../components/IntroBox.jsx'
+import { Navigation } from '../components/Navigation.jsx'
 import { connect } from 'react-redux'
 import * as actions from '../actions/actions.js'
 
@@ -11,13 +12,16 @@ class App extends Component {
 		// Injected by connect() call:
 		const { dispatch, step, stepIndex, maxStepIndex } = this.props;
 		return (
-			<div>
-				<SmartCanvasWithHole selector={step.selector} />
+			<div className="ig-maincontainer">
+				<CanvasWithHole selector={step.selector} />
+				<Navigation 
+					onPrev={ e => dispatch( actions.goToPrevStep( stepIndex, maxStepIndex ) ) } 
+					onNext={ e => dispatch( actions.goToNextStep( stepIndex, maxStepIndex ) ) }
+				/>
 				<IntroBox 
 					title={step.title} 
 					description={step.description} 
-					onPrev={ e => dispatch( actions.goToPrevStep() ) } 
-					onNext={ e => dispatch( actions.goToNextStep( stepIndex, maxStepIndex ) ) }
+					selector={step.selector} 
 				/>
 			</div>
 		)

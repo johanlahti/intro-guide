@@ -33,6 +33,7 @@
     "gulp-inject": "latest",
     "gulp-plumber": "latest",
     "gulp-rename": "latest",
+    "gulp-replace": "^0.5.4",
     "gulp-stylus": "latest",
     "gulp-uglify": "latest",
     "gulp-using": "latest",
@@ -44,6 +45,7 @@
     "react-redux": "latest",
     "redux": "latest",
     "redux-thunk": "^2.1.0",
+    "run-sequence": "^1.2.1",
     "vinyl-source-stream": "latest"
   },
   "dependencies": {

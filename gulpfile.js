@@ -21,6 +21,8 @@ var gutil = require('gulp-util');
 var plumber = require('gulp-plumber');
 var cleanCss = require("gulp-clean-css");
 var filter = require('gulp-filter');
+var replace = require('gulp-replace');
+var runSequence = require('run-sequence');  // Note! When gulp 4.0 is out this lib is not needed anymore. Source: https://www.npmjs.com/package/run-sequence
 
 // var sourcemaps = require('gulp-sourcemaps');
 // var source = require('vinyl-source-stream');
@@ -33,6 +35,7 @@ var p = {
 	ourJs: ["./js/**/*.js", "./js/**/*.jsx", "!**/*_.js*"],
 	ourStylus: ["./css/**/*.styl"],
 	ourCss: ["./css/**/*.css"],
+	destOurJs: "js/",
 	
 	indexHtml: './js/index.html',
 	
@@ -107,8 +110,8 @@ function getLibPaths(libs, inject) {
 	return outSrcs;
 }
 
-gulp.task("clean:total", function() {
-	return del("./dist");
+gulp.task("clean:dist", function() {
+	return del("./dist/**/*");
 });
 
 gulp.task("html", ["libs:inject"], function() {
@@ -120,7 +123,7 @@ gulp.task("html", ["libs:inject"], function() {
 gulp.task("libs:move", function() {
 	var sourcePaths = getLibPaths(p.libs, false);
 	var destDir = path.join(p.dest, p.libsDestSubDir);
-	console.log(sourcePaths);
+	// console.log(sourcePaths);
 	return gulp.src(sourcePaths, {base: p.libsDir})
 		// .pipe(flatten())
 		// .pipe(using())
@@ -152,6 +155,19 @@ gulp.task("libs", ["libs:move"], function() {
 	// gulp.start("libs:compress");
 });
 
+gulp.task('css:fonts', function() {
+	var exts = ["eot", "svg", "ttf", "woff", "woff2"];
+	var srcs = exts.map(ext => {
+		var _p = path.join(p.dest, p.libsDestSubDir, "**/*."+ext);
+		return _p;
+
+	});
+	// console.log(srcs);
+	return gulp.src(srcs)
+		.pipe( flatten() )
+		.pipe(gulp.dest( path.join(p.dest, "fonts") ));
+});
+
 gulp.task('css:stylus', function() {
 	var streamStylus = gulp.src(p.ourStylus, {base: "./"})
 			.pipe(stylus()).on("error", swallowError);
@@ -163,11 +179,12 @@ gulp.task('css:stylus', function() {
 			.pipe(gulp.dest("."));
 });
 
-gulp.task("css", ["css:stylus"], function() {
+gulp.task("css", ["css:stylus", "css:fonts"], function() {
 	return gulp.src([ path.join(p.dest, p.libsDestSubDir, "**/*.css"), "./css/**/*.css"])
 		.pipe(autoprefixer("last 1 version", "> 1%", "ie 8", "ie 9"))
 		.pipe(concat("bundle.css"))
-		.pipe(gulp.dest(p.dest));
+		// .pipe(replace(/\.\.\/fonts/g, "resources/font-awesome/fonts"))
+		.pipe(gulp.dest( path.join(p.dest, "css") ));
 
 	// es.merge( [getLibsCssStream(), getOurCssStream()] )
 });
@@ -184,28 +201,34 @@ gulp.task("ourjs", function() {
 			// .pipe(jshint())
 			// .pipe(jshint.reporter(jshintStylish))
 			.pipe(source("ourcode.js"))
-			.pipe(gulp.dest(p.dest));
+			.pipe(gulp.dest( path.join(p.dest, p.destOurJs) ));
 });
 
 gulp.task("js", ["ourjs"], function() {
-	var jsLibSrcs = getLibPaths(p.libs, false).filter( f => f.substr(-3).search(/\.js/i) > -1 );
-	jsLibSrcs.push( path.join(p.dest, "ourcode.js") );
+	var jsLibSrcs = [
+		path.join(p.dest, p.libsDestSubDir, "**/*.js"),
+		path.join(p.dest, p.destOurJs, "ourcode.js")
+	];
+	console.log(jsLibSrcs);
 	return gulp.src( jsLibSrcs )
+			.pipe(using())
 			.pipe(concat("bundle.js"))
-			.pipe(gulp.dest(p.dest));
+			.pipe(gulp.dest( path.join(p.dest, p.destOurJs) ));
 	
 
 });
 
 gulp.task("code", ["js", "css"]).on("end", function() {
-	gutil.beep();
+	return gutil.beep();
 });
 
-gulp.task("full", ["html", "libs", "code"]);
+gulp.task("full", function() {
+	return runSequence("clean:dist", "libs", ["html", "code"]);
+});
 
 gulp.task("watch", function() {
 	return gulp.watch(p.ourJs.concat(p.ourStylus), ["code"]).on("unlink", function() {
-		console.log("-- END --");
+		// console.log("-- END --");
 	}).on("error", swallowError);
 });
 

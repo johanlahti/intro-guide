@@ -4,16 +4,46 @@ import React, { Component, PropTypes } from 'react'
 
 export class CanvasWithHole extends Component {
 	
-	componentDidMount() {
-		this._drawCanvasHole( this.props.bbox );
+
+	drawHole() {
+		var bbox = this._createBboxFromElement( document.querySelector( this.props.selector ) )
+		this._drawCanvasHole( bbox );
 	}
 
+	componentDidMount() {
+		this.drawHole();
+		window.addEventListener('resize', this._handleResize.bind(this));
+	}
+	
 	/**
 	 * Whenever a new bbox is sent the canvas should redraw
 	 * @return {[type]} [description]
 	 */
 	componentDidUpdate() {
-		this._drawCanvasHole( this.props.bbox );
+		this.drawHole();
+	}
+
+	componentWillUnmount() {
+		window.removeEventListener('resize', this._handleResize);
+	}
+
+	_handleResize() {
+		this.drawHole();	
+	}
+
+
+	_createBboxFromElement(tag) {
+		var padding = 20;
+		var h = tag.clientHeight,
+			w = tag.clientWidth,
+			left = tag.offsetLeft,
+			top = tag.offsetTop;
+		return [
+			left - padding,
+			top - padding,
+			left + w + padding,
+			top + h + padding
+		];
 	}
 
 	_drawCanvasHole(bbox) {

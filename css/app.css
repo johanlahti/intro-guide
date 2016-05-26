@@ -1,3 +1,6 @@
+.ig-maincontainer {
+  font-size: 2rem;
+}
 .ig-canvas-with-hole {
   z-index: 2000;
   position: fixed;
@@ -10,7 +13,41 @@
   position: absolute;
   padding: 1em;
   z-index: 2001;
+  transition: left 0.5s, top 0.5s;
+  color: #fff;
+  margin: 2em;
 }
-.ig-infobox .btn-group {
-  margin-top: 1em;
+.ig-nav-container {
+  width: 100%;
+  bottom: 1em;
+  z-index: 2002;
+  position: absolute;
+}
+.ig-nav {
+  position: relative;
+  display: table;
+  margin: 0 auto;
+  color: #f00;
+  color: #ffaf45;
+}
+.ig-nav-btn {
+  float: left;
+  margin-right: 1em;
+  cursor: pointer;
+  font-weight: bold;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+.ig-nav-btn i {
+  font-size: 0.9em;
+  margin: 0 0.1em;
+  transition: transform 0.5s;
+}
+.ig-nav-btn:nth-child(1):hover i {
+  transform: translateX(-0.5em) rotate(-360deg);
+}
+.ig-nav-btn:nth-child(2):hover i {
+  transform: translateX(0.5em) rotate(360deg);
 }
