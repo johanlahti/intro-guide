@@ -7,7 +7,9 @@
     "test": "test"
   },
   "scripts": {
-    "test": "mocha-casperjs test/main.js"
+    "test": "mocha-casperjs test/main.js",
+    "build": "webpack",
+    "prepublish": "npm run build"
   },
   "keywords": [
     "tour",
@@ -16,6 +18,8 @@
   "author": "Johan Lahti <johanlahti@gmail.com>",
   "license": "MIT",
   "devDependencies": {
+    "babel-core": "^6.9.0",
+    "babel-loader": "^6.2.4",
     "babel-preset-es2015": "latest",
     "babel-preset-react": "latest",
     "babelify": "latest",
@@ -34,6 +38,7 @@
     "gulp-plumber": "latest",
     "gulp-rename": "latest",
     "gulp-replace": "^0.5.4",
+    "gulp-shell": "^0.5.2",
     "gulp-stylus": "latest",
     "gulp-uglify": "latest",
     "gulp-using": "latest",
@@ -46,11 +51,20 @@
     "redux": "latest",
     "redux-thunk": "^2.1.0",
     "run-sequence": "^1.2.1",
-    "vinyl-source-stream": "latest"
+    "vinyl-source-stream": "latest",
+    "webpack": "^1.13.1"
   },
   "dependencies": {
     "bootstrap": "^3.3.6",
     "font-awesome": "^4.6.3",
     "popper.js": "^0.4.2"
+  },
+  "babel": {
+    "plugins": [
+      "transform-react-jsx"
+    ],
+    "presets": [
+      "es2015"
+    ]
   }
 }

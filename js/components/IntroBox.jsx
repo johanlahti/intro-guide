@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react'
-
+import Popper from "popper.js"
 
 
 export class IntroBox extends Component {

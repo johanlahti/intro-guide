@@ -23,6 +23,8 @@ var cleanCss = require("gulp-clean-css");
 var filter = require('gulp-filter');
 var replace = require('gulp-replace');
 var runSequence = require('run-sequence');  // Note! When gulp 4.0 is out this lib is not needed anymore. Source: https://www.npmjs.com/package/run-sequence
+var shell = require('gulp-shell');
+
 
 // var sourcemaps = require('gulp-sourcemaps');
 // var source = require('vinyl-source-stream');
@@ -195,7 +197,8 @@ gulp.task("css", ["css:stylus", "css:fonts"], function() {
 gulp.task("ourjs", function() {
 	return browserify({
 			entries: "./js/index.jsx",
-			debug: true
+			debug: true,
+			standalone: "introGuide"
 		})
 			.transform("babelify", {presets: ["es2015", "react"]}).bundle()
 			// .pipe(jshint())
@@ -204,19 +207,25 @@ gulp.task("ourjs", function() {
 			.pipe(gulp.dest( path.join(p.dest, p.destOurJs) ));
 });
 
-gulp.task("js", ["ourjs"], function() {
-	var jsLibSrcs = [
-		path.join(p.dest, p.libsDestSubDir, "**/*.js"),
-		path.join(p.dest, p.destOurJs, "ourcode.js")
-	];
-	console.log(jsLibSrcs);
-	return gulp.src( jsLibSrcs )
-			.pipe(using())
-			.pipe(concat("bundle.js"))
-			.pipe(gulp.dest( path.join(p.dest, p.destOurJs) ));
+// gulp.task("js", ["ourjs"], function() {
+// 	var jsLibSrcs = [
+// 		path.join(p.dest, p.libsDestSubDir, "**/*.js"),
+// 		path.join(p.dest, p.destOurJs, "ourcode.js")
+// 	];
+// 	console.log(jsLibSrcs);
+// 	return gulp.src( jsLibSrcs )
+// 			// .pipe(using())
+// 			.pipe(uglify())
+// 			.pipe(concat("bundle.js"))
+// 			.pipe(gulp.dest( path.join(p.dest, p.destOurJs) ));
 	
 
-});
+// });
+
+
+gulp.task('js', shell.task([
+	'npm run build'
+]))
 
 gulp.task("code", ["js", "css"]).on("end", function() {
 	return gutil.beep();

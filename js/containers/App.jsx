@@ -40,5 +40,6 @@ function propsToInject(state) {
 	}
 }
 
+
 // Wrap the component to inject dispatch and state into it
 export default connect(propsToInject)(App)
