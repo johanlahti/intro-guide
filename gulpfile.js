@@ -224,7 +224,8 @@ gulp.task("ourjs", function() {
 
 
 gulp.task('js', shell.task([
-	'npm run build'
+	// 'npm run build'
+	'webpack'
 ]))
 
 gulp.task("code", ["js", "css"]).on("end", function() {

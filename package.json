@@ -8,9 +8,8 @@
   },
   "scripts": {
     "test": "mocha-casperjs test/main.js",
-    "build": "webpack",
-    "prepublish": "npm run build",
-    "preinstall": "npm run build"
+    "build": "./node_modules/.bin/gulp full",
+    "prepublish": "npm run build"
   },
   "keywords": [
     "tour",
