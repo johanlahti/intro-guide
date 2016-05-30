@@ -9,7 +9,8 @@
   "scripts": {
     "test": "mocha-casperjs test/main.js",
     "build": "./node_modules/.bin/gulp full",
-    "prepublish": "npm run build"
+    "prepublish": "npm run build",
+    "install": "npm run build"
   },
   "keywords": [
     "tour",
