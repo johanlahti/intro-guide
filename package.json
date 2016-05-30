@@ -9,7 +9,8 @@
   "scripts": {
     "test": "mocha-casperjs test/main.js",
     "build": "webpack",
-    "prepublish": "npm run build"
+    "prepublish": "npm run build",
+    "preinstall": "npm run build"
   },
   "keywords": [
     "tour",
@@ -26,6 +27,7 @@
     "browserify": "latest",
     "del": "latest",
     "event-stream": "latest",
+    "extract-text-webpack-plugin": "^1.0.1",
     "fs": "latest",
     "gulp": "latest",
     "gulp-autoprefixer": "latest",
